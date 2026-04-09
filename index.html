@@ -2,387 +2,401 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anteproyecto de Tesis — Francia Ramírez · UNICUCES 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tesis Francia Ramírez · UNICUCES 2026</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#000;font-family:'Inter',system-ui,sans-serif;overflow:hidden}
-.stage{width:100vw;height:100vh;background:#0d0d0d;position:relative;display:flex;flex-direction:column;overflow:hidden}
-.bg-accent{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#C9A84C,#e8c96a,#C9A84C);z-index:10}
-.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transition:opacity .5s ease;pointer-events:none}
-.slide.active{opacity:1;pointer-events:auto}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:1% 3%;border-bottom:1px solid #C9A84C22;background:#0a0a0a;flex-shrink:0}
-.tbrand{display:flex;align-items:center;gap:10px}
-.gdot{width:10px;height:10px;border-radius:50%;background:#C9A84C}
-.tbrand-txt{font-size:1.1vw;font-weight:700;color:#C9A84C;letter-spacing:.09em}
-.tright{font-size:.95vw;color:#3a3a3a;font-weight:500}
-.progbar{height:4px;background:#1a1a1a;flex-shrink:0}
-.progfill{height:100%;background:#C9A84C;transition:width .4s}
-.sc{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2% 5%}
-.slide-tag{display:inline-block;font-size:.95vw;font-weight:700;letter-spacing:.1em;padding:.3% 1.2%;border-radius:30px;background:#C9A84C18;color:#C9A84C;border:1px solid #C9A84C44;margin-bottom:1.2%;width:fit-content}
-.slide-title{font-size:3.2vw;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.6%}
-.slide-sub{font-size:1.2vw;color:#C9A84C88;margin-bottom:2%;font-style:italic}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.2%;height:52%}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1%;height:52%}
-.card{background:#161616;border:1px solid #252525;border-radius:1vw;padding:1.4% 1.8%;display:flex;flex-direction:column;overflow:hidden}
-.card.gold{border-color:#C9A84C44;background:#C9A84C0a}
-.card.accent{border-left:3px solid #C9A84C;border-radius:0 1vw 1vw 0}
-.clabel{font-size:.85vw;font-weight:700;color:#C9A84C;letter-spacing:.08em;margin-bottom:.5%;flex-shrink:0}
-.cval{font-size:1.05vw;color:rgba(255,255,255,.85);line-height:1.6}
-.cval b{color:#fff}
-.ul{list-style:none;flex:1;overflow:hidden}
-.ul li{font-size:1vw;color:rgba(255,255,255,.82);padding:.35% 0 .35% 1.4%;position:relative;line-height:1.5;border-bottom:1px solid #1f1f1f}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d0d0d;font-family:system-ui,-apple-system,sans-serif}
+
+/* BOTONES FLOTANTES — SIEMPRE VISIBLES — NO SE MUEVEN */
+.btn-prev,.btn-next{
+  position:fixed;
+  bottom:20px;
+  z-index:9999;
+  border:none;
+  cursor:pointer;
+  font-weight:800;
+  font-size:16px;
+  border-radius:50px;
+  padding:14px 22px;
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+  transition:all .2s;
+}
+.btn-prev{
+  left:16px;
+  background:#1e1e1e;
+  color:#C9A84C;
+  border:2px solid #C9A84C44;
+}
+.btn-next{
+  right:16px;
+  background:#C9A84C;
+  color:#111;
+  font-size:17px;
+}
+.btn-prev:active{background:#2a2a2a}
+.btn-next:active{background:#b8963f}
+
+/* PUNTOS DE NAVEGACIÓN FLOTANTES */
+.nav-dots{
+  position:fixed;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:6px;
+  z-index:9999;
+  align-items:center;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:#333;cursor:pointer;transition:all .25s;flex-shrink:0}
+.dot.on{background:#C9A84C;width:18px;border-radius:4px}
+
+/* BARRA DE PROGRESO */
+.prog-bar{position:fixed;top:0;left:0;right:0;height:4px;background:#1a1a1a;z-index:9999}
+.prog-fill{height:100%;background:#C9A84C;transition:width .4s}
+
+/* CONTADOR */
+.counter{position:fixed;top:8px;right:12px;font-size:11px;color:#444;z-index:9999;font-weight:600}
+
+/* ÁREA DE SLIDES */
+.slides{position:fixed;top:4px;left:0;right:0;bottom:70px;overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .4s;display:flex;flex-direction:column;overflow:hidden}
+.slide.on{opacity:1;pointer-events:auto}
+
+/* TOPBAR DE CADA SLIDE */
+.tb{background:#0a0a0a;border-bottom:1px solid #C9A84C22;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:7px}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:#C9A84C;flex-shrink:0}
+.tb-title{font-size:clamp(9px,2.2vw,13px);font-weight:700;color:#C9A84C;letter-spacing:.06em}
+.tb-right{font-size:clamp(8px,2vw,11px);color:#444}
+
+/* CONTENIDO */
+.sc{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:clamp(10px,2.5vw,20px) clamp(12px,3vw,24px);gap:clamp(8px,1.5vw,14px)}
+
+/* TIPOGRAFÍA */
+.h1{font-size:clamp(18px,4vw,42px);font-weight:900;color:#fff;line-height:1.15;flex-shrink:0}
+.h2{font-size:clamp(11px,1.8vw,16px);color:#C9A84C88;font-style:italic;flex-shrink:0}
+.lbl{font-size:clamp(9px,1.5vw,12px);font-weight:700;color:#C9A84C;letter-spacing:.07em;margin-bottom:clamp(4px,.6vw,7px);flex-shrink:0}
+.txt{font-size:clamp(10px,1.8vw,14px);color:rgba(255,255,255,.85);line-height:1.6}
+.txt b{color:#fff}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,1.2vw,12px);flex:1;min-height:0}
+.gcol{display:flex;flex-direction:column;gap:clamp(6px,1.2vw,12px);min-height:0}
+
+/* CARDS */
+.card{background:#171717;border:1px solid #242424;border-radius:clamp(8px,1.5vw,14px);padding:clamp(8px,1.5vw,14px) clamp(10px,1.8vw,18px);display:flex;flex-direction:column;overflow:hidden;flex:1}
+.card.gold{border-color:#C9A84C44;background:#C9A84C08}
+.card.acc{border-left:3px solid #C9A84C;border-radius:0 clamp(8px,1.5vw,14px) clamp(8px,1.5vw,14px) 0}
+.card.bl{border-left:3px solid #C9A84C;border-radius:0 clamp(8px,1.5vw,14px) clamp(8px,1.5vw,14px) 0;background:#C9A84C08}
+
+/* STATS */
+.s3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(5px,1vw,10px);flex-shrink:0}
+.sbox{background:#171717;border:1px solid #242424;border-radius:clamp(6px,1vw,12px);padding:clamp(8px,1.5vw,14px) 8px;text-align:center}
+.sn{font-size:clamp(20px,4vw,44px);font-weight:900;color:#C9A84C;line-height:1}
+.sl{font-size:clamp(8px,1.4vw,12px);color:#555;margin-top:3px;line-height:1.3}
+
+/* LISTAS */
+.ul{list-style:none;overflow:hidden}
+.ul li{font-size:clamp(10px,1.7vw,13px);color:rgba(255,255,255,.82);padding:clamp(4px,.5vw,7px) 0 clamp(4px,.5vw,7px) 14px;position:relative;line-height:1.5;border-bottom:1px solid #1e1e1e}
 .ul li:last-child{border-bottom:none}
-.ul li:before{content:'';position:absolute;left:2px;top:.7em;width:.45vw;height:.45vw;border-radius:50%;background:#C9A84C}
-.srow{display:grid;grid-template-columns:repeat(3,1fr);gap:1%;margin-bottom:1.5%}
-.sbox{background:#161616;border:1px solid #252525;border-radius:.8vw;padding:1.2% 1%;text-align:center}
-.snum{font-size:3vw;font-weight:900;color:#C9A84C;line-height:1.1}
-.slbl{font-size:.85vw;color:#555;margin-top:.3%;line-height:1.3}
-.mlist{display:flex;flex-direction:column;gap:.7%;flex:1}
-.mrow{display:flex;align-items:flex-start;gap:1%;background:#161616;border:1px solid #252525;border-radius:.7vw;padding:.8% 1.2%;flex:1}
+.ul li:before{content:'';position:absolute;left:2px;top:.72em;width:6px;height:6px;border-radius:50%;background:#C9A84C}
+
+/* MÓDULOS */
+.mlist{display:flex;flex-direction:column;gap:clamp(5px,.8vw,8px);flex:1;min-height:0}
+.mrow{display:flex;gap:clamp(8px,1.2vw,14px);align-items:flex-start;background:#171717;border:1px solid #242424;border-radius:clamp(6px,.8vw,10px);padding:clamp(7px,1vw,12px);flex:1}
 .mrow.hl{border-color:#C9A84C44;background:#C9A84C08}
-.mnum{width:2.2vw;height:2.2vw;border-radius:.5vw;background:#C9A84C18;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;font-size:.85vw;font-weight:700;color:#C9A84C;flex-shrink:0;margin-top:.1%}
-.mnum.solid{background:#C9A84C;color:#111;border-color:#C9A84C}
-.mname{font-size:1vw;font-weight:700;color:#fff;margin-bottom:.15%}
-.mdesc{font-size:.85vw;color:#666;line-height:1.45}
-.tl{display:flex;flex-direction:column;gap:0;flex:1}
-.tlrow{display:flex;gap:1%;padding:.6% 0;border-bottom:1px solid #1c1c1c;align-items:flex-start}
-.tlrow:last-child{border-bottom:none}
-.tlc{width:2vw;height:2vw;border-radius:50%;background:#C9A84C18;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;font-size:.75vw;font-weight:700;color:#C9A84C;flex-shrink:0;margin-top:.1%}
-.tlc.now{background:#C9A84C;color:#111;border-color:#C9A84C}
-.tlphase{font-size:.85vw;font-weight:700;color:#C9A84C;margin-bottom:.1%}
-.tltext{font-size:.85vw;color:rgba(255,255,255,.7)}
-.qbox{background:#C9A84C;border-radius:.8vw;padding:1.2% 2%;margin-top:1%}
-.qbox p{font-size:1.15vw;color:#111;font-weight:700;line-height:1.6;text-align:center}
-.pbox{background:#C9A84C0d;border:1px solid #C9A84C33;border-radius:.8vw;padding:1% 2%;margin-top:1%;text-align:center}
-.pbox p{font-size:1.05vw;color:#C9A84C;font-style:italic;line-height:1.6}
-.prow{display:flex;justify-content:space-between;align-items:center;padding:.5% 0;border-bottom:1px solid #1f1f1f;font-size:.9vw}
-.prow:last-child{border:none;padding-top:.6%;font-weight:700}
-.prow span:first-child{color:rgba(255,255,255,.7)}
-.prow span:last-child{color:#fff}
-.jlist{display:flex;flex-direction:column;gap:.8%;flex:1}
-.jcard{display:flex;gap:1%;align-items:flex-start;background:#161616;border:1px solid #252525;border-radius:.7vw;padding:.9% 1.3%;flex:1}
-.jcard.hl{border-color:#C9A84C44;background:#C9A84C08}
-.jicon{width:2.5vw;height:2.5vw;border-radius:50%;background:#C9A84C18;border:1px solid #C9A84C33;display:flex;align-items:center;justify-content:center;font-size:1.2vw;flex-shrink:0}
-.jicon.solid{background:#C9A84C22;border-color:#C9A84C}
-.jtitle{font-size:.95vw;font-weight:700;color:#C9A84C;margin-bottom:.2%}
-.jtext{font-size:.85vw;color:rgba(255,255,255,.78);line-height:1.5}
-.cover-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2% 6%}
-.cover-pretitle{font-size:1vw;font-weight:700;color:#C9A84C;letter-spacing:.15em;margin-bottom:1.5%}
-.cover-title{font-size:4.2vw;font-weight:900;color:#fff;line-height:1.1;margin-bottom:1.5%;max-width:85%}
-.cover-title span{color:#C9A84C}
-.cover-sub{font-size:1.2vw;color:rgba(255,255,255,.5);margin-bottom:2.5%;line-height:1.6;max-width:70%}
-.cover-meta{display:flex;gap:2%;justify-content:center;flex-wrap:wrap}
-.cmeta{background:#161616;border:1px solid #252525;border-radius:.7vw;padding:.8% 1.5%;font-size:.9vw;color:rgba(255,255,255,.7)}
-.cmeta b{color:#C9A84C}
-.cierre-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2% 8%}
-.cierre-phrase{font-size:2.4vw;font-weight:900;color:#fff;line-height:1.3;margin-bottom:2%;max-width:80%}
-.cierre-phrase span{color:#C9A84C}
-.botnav{display:flex;align-items:center;gap:.8%;padding:.8% 2.5%;background:#080808;border-top:1px solid #1a1a1a;flex-shrink:0}
-.nbtn{padding:.5% 1.5%;border-radius:.5vw;font-size:.9vw;font-weight:700;cursor:pointer;border:1px solid #2a2a2a;background:transparent;color:#555;transition:all .2s;letter-spacing:.03em}
-.nbtn:hover{border-color:#C9A84C55;color:#C9A84C}
-.nbtn.gold{background:#C9A84C;border-color:#C9A84C;color:#111}
-.nbtn.gold:hover{background:#d4b560}
-.nbtn.fs{background:#1a1a1a;color:#888}
-.dots{display:flex;gap:.4%;margin:0 auto;align-items:center}
-.dot{width:.6vw;height:.6vw;border-radius:50%;background:#2a2a2a;cursor:pointer;transition:all .25s}
-.dot.on{background:#C9A84C;width:1.5vw;border-radius:.3vw}
-.sinfo{font-size:.85vw;color:#333;white-space:nowrap}
-.hint{position:absolute;bottom:7%;left:50%;transform:translateX(-50%);font-size:.8vw;color:#2a2a2a;letter-spacing:.05em}
+.mn{width:clamp(26px,3.5vw,38px);height:clamp(26px,3.5vw,38px);border-radius:clamp(5px,.6vw,8px);background:#C9A84C18;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;font-size:clamp(10px,1.4vw,14px);font-weight:700;color:#C9A84C;flex-shrink:0}
+.mn.s{background:#C9A84C;color:#111;border-color:#C9A84C}
+.mname{font-size:clamp(11px,1.8vw,15px);font-weight:700;color:#fff;margin-bottom:2px}
+.mdesc{font-size:clamp(9px,1.4vw,12px);color:#666;line-height:1.45}
+
+/* JUSTIFICACIÓN */
+.jlist{display:flex;flex-direction:column;gap:clamp(6px,1vw,10px);flex:1;min-height:0}
+.jrow{display:flex;gap:clamp(8px,1.2vw,14px);align-items:flex-start;background:#171717;border:1px solid #242424;border-radius:clamp(6px,.8vw,10px);padding:clamp(8px,1.2vw,14px);flex:1}
+.jrow.hl{border-color:#C9A84C44;background:#C9A84C08}
+.ji{width:clamp(30px,3.5vw,42px);height:clamp(30px,3.5vw,42px);border-radius:50%;background:#C9A84C18;border:1px solid #C9A84C33;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,2vw,20px);flex-shrink:0}
+.ji.s{background:#C9A84C22;border-color:#C9A84C}
+.jt{font-size:clamp(10px,1.7vw,14px);font-weight:700;color:#C9A84C;margin-bottom:2px}
+.jx{font-size:clamp(9px,1.5vw,13px);color:rgba(255,255,255,.78);line-height:1.5}
+
+/* TIMELINE */
+.tl{display:flex;flex-direction:column;overflow:hidden}
+.tlr{display:flex;gap:clamp(6px,1vw,12px);padding:clamp(4px,.7vw,8px) 0;border-bottom:1px solid #1c1c1c;align-items:flex-start}
+.tlr:last-child{border:none}
+.tlc{width:clamp(22px,2.5vw,30px);height:clamp(22px,2.5vw,30px);border-radius:50%;background:#C9A84C18;border:1px solid #C9A84C44;display:flex;align-items:center;justify-content:center;font-size:clamp(8px,1.1vw,11px);font-weight:700;color:#C9A84C;flex-shrink:0}
+.tlc.now{background:#C9A84C;color:#111}
+.tlp{font-size:clamp(9px,1.5vw,13px);font-weight:700;color:#C9A84C}
+.tlt{font-size:clamp(9px,1.4vw,12px);color:rgba(255,255,255,.7)}
+
+/* PRESUPUESTO */
+.pr{display:flex;justify-content:space-between;padding:clamp(3px,.6vw,6px) 0;border-bottom:1px solid #1f1f1f;font-size:clamp(9px,1.5vw,13px)}
+.pr:last-child{border:none;font-weight:700;padding-top:clamp(5px,.8vw,8px)}
+.pr span:first-child{color:rgba(255,255,255,.7)}
+.pr span:last-child{color:#fff}
+
+/* CAJAS ESPECIALES */
+.qbox{background:#C9A84C;border-radius:clamp(7px,1vw,12px);padding:clamp(10px,1.5vw,16px)}
+.qbox p{font-size:clamp(11px,1.8vw,16px);color:#111;font-weight:700;line-height:1.6;text-align:center}
+.pbox{background:#C9A84C0d;border:1px solid #C9A84C33;border-radius:clamp(7px,1vw,12px);padding:clamp(8px,1.2vw,14px);text-align:center;display:flex;align-items:center;justify-content:center;flex:1}
+.pbox p{font-size:clamp(9px,1.5vw,13px);color:#C9A84C;font-style:italic;line-height:1.6}
+
+/* PORTADA */
+.cover{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(14px,3vw,32px) clamp(16px,6vw,60px);gap:clamp(10px,2vw,20px)}
+.cpre{font-size:clamp(10px,1.8vw,16px);font-weight:700;color:#C9A84C;letter-spacing:.15em}
+.ctitle{font-size:clamp(22px,5vw,60px);font-weight:900;color:#fff;line-height:1.1}
+.ctitle span{color:#C9A84C}
+.csub{font-size:clamp(11px,1.8vw,18px);color:rgba(255,255,255,.4);line-height:1.6}
+.cmetas{display:flex;flex-wrap:wrap;gap:clamp(6px,1vw,12px);justify-content:center}
+.cm{background:#171717;border:1px solid #252525;border-radius:clamp(6px,.8vw,10px);padding:clamp(6px,1vw,12px) clamp(10px,1.5vw,18px);font-size:clamp(9px,1.5vw,13px);color:rgba(255,255,255,.65)}
+.cm b{color:#C9A84C}
+
+/* CIERRE */
+.cierre{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(14px,3vw,32px) clamp(16px,8vw,80px);gap:clamp(14px,2.5vw,28px)}
+.ctag{display:inline-block;font-size:clamp(9px,1.5vw,13px);font-weight:700;letter-spacing:.1em;padding:clamp(4px,.5vw,7px) clamp(12px,1.5vw,18px);border-radius:30px;background:#C9A84C18;color:#C9A84C;border:1px solid #C9A84C44}
+.cfrase{font-size:clamp(16px,3vw,36px);font-weight:900;color:#fff;line-height:1.3}
+.cfrase span{color:#C9A84C}
 </style>
 </head>
 <body>
-<div class="stage">
-  <div class="bg-accent"></div>
-  <div class="progbar"><div class="progfill" id="prog"></div></div>
-  <div id="slides-wrap" style="flex:1;position:relative;overflow:hidden"></div>
-  <div class="botnav">
-    <button class="nbtn" id="bprev" onclick="prev()">&#8592; Anterior</button>
-    <div class="dots" id="dots"></div>
-    <button class="nbtn gold" id="bnext" onclick="next()">Siguiente &#8594;</button>
-    <span class="sinfo" id="sinfo"></span>
-    <button class="nbtn fs" onclick="toggleFS()">&#9974; Pantalla completa</button>
-  </div>
-</div>
+
+<!-- BARRA PROGRESO FIJA -->
+<div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+<div class="counter" id="counter"></div>
+
+<!-- SLIDES -->
+<div class="slides" id="wrap"></div>
+
+<!-- BOTONES FLOTANTES FIJOS — SIEMPRE VISIBLES -->
+<button class="btn-prev" id="bprev" onclick="prev()">← Ant.</button>
+<div class="nav-dots" id="dots"></div>
+<button class="btn-next" id="bnext" onclick="next()">Siguiente →</button>
 
 <script>
-const slides=[
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">UNICUCES &middot; SEMILLERO DE INVESTIGACI&Oacute;N &middot; 2026</span></div><span class="tright">Tecnolog&iacute;a en Gesti&oacute;n Contable y Financiera</span></div>
-<div class="cover-center">
-  <div class="cover-pretitle">ANTEPROYECTO DE TESIS</div>
-  <div class="cover-title">Modelo de Gesti&oacute;n <span>Contable y Financiera</span><br>Asistido por Inteligencia Artificial</div>
-  <div class="cover-sub">Para administradores de propiedad horizontal en Colombia</div>
-  <div class="cover-meta">
-    <div class="cmeta"><b>Francia Elvira Ram&iacute;rez Robayo</b> &middot; C.C. 1.144.xxx.xxx</div>
-    <div class="cmeta">Asesora: <b>Mg. Ingrid Vaneza Ca&ntilde;izares Narv&aacute;ez</b></div>
-    <div class="cmeta">Santiago de Cali &middot; <b>2026</b></div>
-  </div>
+const S=[
+// 0 PORTADA
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">UNICUCES · SEMILLERO DE INVESTIGACIÓN · 2026</span></div><span class="tb-right">Tecnología en Gestión Contable y Financiera</span></div>
+<div class="cover">
+<div class="cpre">ANTEPROYECTO DE TESIS</div>
+<div class="ctitle">Modelo de Gestión <span>Contable y Financiera</span> Asistido por Inteligencia Artificial</div>
+<div class="csub">Para administradores de propiedad horizontal en Colombia</div>
+<div class="cmetas">
+<div class="cm"><b>Francia Elvira Ramírez Robayo</b> · C.C. 1.144.059.577</div>
+<div class="cm">Asesora: <b>Mg. Ingrid Vaneza Cañizares Narváez</b></div>
+<div class="cm"><b>UNICUCES</b> · Santiago de Cali · 2026</div>
+</div></div>`},
+
+// 1 INTRODUCCIÓN
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">01 · INTRODUCCIÓN</span></div><span class="tb-right">¿Por qué nació este proyecto?</span></div>
+<div class="sc">
+<div class="h1">El contexto que motivó esta investigación</div>
+<div class="s3">
+<div class="sbox"><div class="sn">+8M</div><div class="sl">Propiedades horizontales en Colombia</div></div>
+<div class="sbox"><div class="sn">60%</div><div class="sl">De colombianos vive en copropiedades</div></div>
+<div class="sbox"><div class="sn">36K+</div><div class="sl">Conjuntos residenciales en Bogotá</div></div>
 </div>
-<div class="hint">Usa las flechas del teclado &#8592; &#8594; o los botones para navegar</div>`},
+<div class="g2">
+<div class="card gold"><div class="lbl">El origen real</div><div class="txt">Nació de la observación directa en <b>reuniones de consejo de administración y asambleas</b>, donde se identificaron dos problemas que se repiten: errores en retenciones tributarias y falta de estrategias de cobro de cartera.</div></div>
+<div class="card"><div class="lbl">La brecha que nadie nombra</div><div class="txt">La <b>Lonja de Propiedad Raíz de Cali (2023)</b> señaló que la mayoría de copropiedades operan con <b>administradores informales</b>, sin preparación profesional. La distancia entre las exigencias contables y la preparación real es enorme.</div></div>
+</div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">01 &middot; INTRODUCCI&Oacute;N</span></div><span class="tright">&iquest;Por qu&eacute; naci&oacute; este proyecto?</span></div>
+// 2 PROBLEMA
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">02 · EL PROBLEMA</span></div><span class="tb-right">¿Qué está fallando y a quién afecta?</span></div>
 <div class="sc">
-  <div class="slide-title">El contexto que motiv&oacute; esta investigaci&oacute;n</div>
-  <div class="srow">
-    <div class="sbox"><div class="snum">+8M</div><div class="slbl">Propiedades horizontales en Colombia</div></div>
-    <div class="sbox"><div class="snum">60%</div><div class="slbl">De colombianos vive en copropiedades</div></div>
-    <div class="sbox"><div class="snum">36K+</div><div class="slbl">Conjuntos residenciales solo en Bogot&aacute;</div></div>
-  </div>
-  <div class="g2" style="height:44%">
-    <div class="card gold">
-      <div class="clabel">El origen real de esta investigaci&oacute;n</div>
-      <div class="cval">Naci&oacute; de la observaci&oacute;n directa en <b>reuniones de consejo de administraci&oacute;n y asambleas</b> de copropiedades, donde se identificaron dos problemas cr&iacute;ticos que se repiten constantemente: errores en retenciones tributarias y falta de estrategias efectivas de cobro de cartera.</div>
-    </div>
-    <div class="card">
-      <div class="clabel">La brecha que nadie nombra con claridad</div>
-      <div class="cval">En Cali, la <b>Lonja de Propiedad Ra&iacute;z (2023)</b> se&ntilde;al&oacute; que la mayor&iacute;a de copropiedades operan con <b>administradores informales</b>, sin preparaci&oacute;n profesional. La distancia entre las exigencias contables reales y la preparaci&oacute;n de quienes administran es enorme.</div>
-    </div>
-  </div>
-</div>`},
+<div class="h1">Planteamiento del problema</div>
+<div class="g2">
+<div class="card"><div class="lbl">Cadena de errores en retenciones</div><ul class="ul">
+<li>Administrador aplica mal Retefuente, Reteica o IVA a un proveedor</li>
+<li>Proveedor exige corrección inmediata → proceso tedioso de ajuste</li>
+<li>Si no se detecta, la <b>DIAN sanciona a la copropiedad</b></li>
+<li>El administrador <b>asume la culpa</b> y a veces responde con recursos propios</li>
+</ul></div>
+<div class="gcol">
+<div class="card" style="flex:1"><div class="lbl">Problema paralelo: cartera</div><ul class="ul">
+<li>No hay estrategias claras de cobro de cuotas vencidas</li>
+<li>Cobro jurídico dilata años el proceso</li>
+<li>La copropiedad opera sin recursos suficientes</li>
+</ul></div>
+<div class="qbox"><p>¿De qué manera un modelo asistido por IA puede reducir errores en retenciones y mejorar la recuperación de cartera en copropiedades colombianas?</p></div>
+</div></div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">02 &middot; EL PROBLEMA</span></div><span class="tright">&iquest;Qu&eacute; est&aacute; fallando y a qui&eacute;n afecta?</span></div>
+// 3 OBJETIVOS
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">03 · OBJETIVOS</span></div><span class="tb-right">¿Qué se busca lograr?</span></div>
 <div class="sc">
-  <div class="slide-title">Planteamiento del problema</div>
-  <div class="g2" style="height:58%">
-    <div class="card">
-      <div class="clabel">Cadena de errores en retenciones</div>
-      <ul class="ul">
-        <li>Administrador aplica mal Retefuente, Reteica o IVA a un proveedor</li>
-        <li>El proveedor exige correcci&oacute;n inmediata &rarr; proceso tedioso de ajuste</li>
-        <li>Si el error no se detecta, la <b>DIAN sanciona a la copropiedad</b></li>
-        <li>El administrador <b>asume la culpa</b> y en ocasiones responde con recursos propios</li>
-        <li>El contador frecuentemente queda al margen de las consecuencias</li>
-      </ul>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1%;height:100%">
-      <div class="card" style="flex:1">
-        <div class="clabel">Problema paralelo: cartera sin recuperar</div>
-        <ul class="ul">
-          <li>No hay estrategias claras de cobro de cuotas vencidas</li>
-          <li>El cobro jur&iacute;dico puede tardar a&ntilde;os en resolverse</li>
-          <li>La copropiedad opera sin recursos suficientes para sus obligaciones</li>
-        </ul>
-      </div>
-      <div class="qbox">
-        <p>&iquest;De qu&eacute; manera un modelo de gesti&oacute;n contable asistido por IA puede reducir errores en retenciones y mejorar la recuperaci&oacute;n de cartera en copropiedades colombianas?</p>
-      </div>
-    </div>
-  </div>
-</div>`},
+<div class="h1">Objetivos de la investigación</div>
+<div class="card gold" style="flex-shrink:0"><div class="lbl">Objetivo general</div><div class="txt">Diseñar un modelo de gestión contable y financiera asistido por IA que permita a los administradores de propiedad horizontal en Colombia <b>reducir errores en retenciones y mejorar la recuperación de cartera</b>, sin requerir formación especializada en contabilidad.</div></div>
+<div class="g2">
+<div class="card acc"><div class="lbl">A · Diagnóstico</div><div class="txt">Identificar errores en retenciones y cartera en copropiedades de Cali mediante encuestas a administradores y contadores</div></div>
+<div class="card acc"><div class="lbl">B · Ciclos de ingresos</div><div class="txt">Analizar ciclos de salarios, cesantías y primas para diseñar estrategias de cobro adaptadas a los copropietarios</div></div>
+<div class="card acc"><div class="lbl">C · Herramienta IA</div><div class="txt">Definir módulos: retenciones, comprobantes, análisis financiero e informes automáticos</div></div>
+<div class="card acc"><div class="lbl">D · Modelo integral</div><div class="txt">Proponer un modelo que reduzca la brecha entre conocimiento técnico y administración práctica</div></div>
+</div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">03 &middot; OBJETIVOS</span></div><span class="tright">&iquest;Qu&eacute; se busca lograr?</span></div>
+// 4 JUSTIFICACIÓN
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">04 · JUSTIFICACIÓN</span></div><span class="tb-right">¿Por qué importa esta investigación?</span></div>
 <div class="sc">
-  <div class="slide-title">Objetivos de la investigaci&oacute;n</div>
-  <div class="card gold" style="margin-bottom:1%;padding:1% 1.8%">
-    <div class="clabel">Objetivo general</div>
-    <div class="cval" style="font-size:1.1vw">Dise&ntilde;ar un modelo de gesti&oacute;n contable y financiera asistido por IA que permita a los administradores de propiedad horizontal en Colombia <b>reducir errores en retenciones y mejorar la recuperaci&oacute;n de cartera</b>, sin requerir formaci&oacute;n especializada en contabilidad.</div>
-  </div>
-  <div class="g2" style="height:46%">
-    <div class="card accent"><div class="clabel">A &middot; Diagn&oacute;stico</div><div class="cval">Identificar errores en retenciones y cartera en copropiedades de Cali mediante encuestas a administradores y contadores</div></div>
-    <div class="card accent"><div class="clabel">B &middot; Ciclos de ingresos</div><div class="cval">Analizar ciclos de ingresos (salarios, cesant&iacute;as, primas) para dise&ntilde;ar estrategias de cobro adaptadas a la realidad financiera</div></div>
-    <div class="card accent"><div class="clabel">C &middot; Funcionalidades de la herramienta</div><div class="cval">Definir m&oacute;dulos: c&aacute;lculo de retenciones, revisi&oacute;n de comprobantes, an&aacute;lisis financiero e informes autom&aacute;ticos</div></div>
-    <div class="card accent"><div class="clabel">D &middot; Modelo integral</div><div class="cval">Proponer un modelo que reduzca la brecha entre el conocimiento t&eacute;cnico contable y la administraci&oacute;n pr&aacute;ctica de copropiedades</div></div>
-  </div>
-</div>`},
+<div class="h1">¿Por qué importa esta investigación?</div>
+<div class="jlist">
+<div class="jrow"><div class="ji">🌍</div><div style="flex:1"><div class="jt">Social</div><div class="jx">Cuando una copropiedad tiene problemas financieros, <b>las consecuencias las absorben las familias</b>. El deterioro desvaloriza inmuebles. Con el <b>60% de colombianos</b> en propiedad horizontal, mejorar su gestión tiene impacto social masivo.</div></div></div>
+<div class="jrow"><div class="ji">🏛</div><div style="flex:1"><div class="jt">Académica</div><div class="jx">La <b>Gerencia 4.0 y 5.0</b> está transformando la contabilidad. <b>No existe investigación en Colombia</b> que una propiedad horizontal con IA contable. Esta propuesta llena ese vacío.</div></div></div>
+<div class="jrow hl"><div class="ji s">💻</div><div style="flex:1"><div class="jt">Práctica</div><div class="jx">Hoy administradores usan ChatGPT sin saber que no está especializado. Esta herramienta está diseñada <b>exclusivamente para propiedad horizontal bajo la Ley 675 de 2001</b>. Potencia al administrador sin reemplazar al contador.</div></div></div>
+</div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">04 &middot; JUSTIFICACI&Oacute;N</span></div><span class="tright">&iquest;Por qu&eacute; importa esta investigaci&oacute;n?</span></div>
+// 5 MARCO
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">05 · MARCO DE REFERENCIA</span></div><span class="tb-right">Fundamentos teóricos y legales</span></div>
 <div class="sc">
-  <div class="slide-title">&iquest;Por qu&eacute; importa esta investigaci&oacute;n?</div>
-  <div class="jlist">
-    <div class="jcard">
-      <div class="jicon">&#127760;</div>
-      <div style="flex:1"><div class="jtitle">Social</div><div class="jtext">Cuando una copropiedad tiene problemas financieros, <b>las consecuencias las absorben las familias que viven all&iacute;</b>. El deterioro de infraestructura y zonas comunes desvaloriza el inmueble de cada copropietario. Con el <b>60% de colombianos</b> viviendo en propiedad horizontal, mejorar su gesti&oacute;n tiene impacto social masivo.</div></div>
-    </div>
-    <div class="jcard">
-      <div class="jicon">&#127979;</div>
-      <div style="flex:1"><div class="jtitle">Acad&eacute;mica</div><div class="jtext">La <b>Gerencia 4.0 y 5.0</b> y la IA est&aacute;n transformando la contabilidad. Esta investigaci&oacute;n demuestra que es posible integrar conocimiento contable con tecnolog&iacute;a avanzada. <b>No existe investigaci&oacute;n en Colombia</b> que una propiedad horizontal con IA contable.</div></div>
-    </div>
-    <div class="jcard hl">
-      <div class="jicon solid">&#128187;</div>
-      <div style="flex:1"><div class="jtitle">Pr&aacute;ctica</div><div class="jtext">Hoy administradores usan ChatGPT para dudas contables sin saber que no est&aacute; especializado. Esta herramienta est&aacute; dise&ntilde;ada <b>exclusivamente para propiedad horizontal</b> bajo la Ley 675 de 2001. No reemplaza al contador &mdash; <b>potencia la capacidad de decisi&oacute;n del administrador</b>.</div></div>
-    </div>
-  </div>
-</div>`},
+<div class="h1">Marco de referencia</div>
+<div class="g2">
+<div class="card bl"><div class="lbl">Autores clave</div><ul class="ul">
+<li><b>Van Horne y Wachowicz (2010):</b> la administración financiera eficiente depende de la calidad de la información contable</li>
+<li><b>Moll y Yigitbasioglu (2019):</b> la IA transforma el rol del contador — no lo elimina</li>
+<li><b>Schwab (2016):</b> las organizaciones del futuro deben integrar IA para mantenerse competitivas</li>
+</ul></div>
+<div class="gcol">
+<div class="card" style="flex:1"><div class="lbl">Marco legal</div><ul class="ul">
+<li><b>Ley 675 de 2001</b> — Propiedad horizontal en Colombia</li>
+<li><b>Ley 1314 de 2009</b> — Convergencia hacia NIIF</li>
+<li><b>Estatuto Tributario</b> — Retefuente, Reteica e IVA</li>
+<li><b>Código de Comercio</b> — Responsabilidad administradores</li>
+</ul></div>
+<div class="card gold" style="flex:1"><div class="lbl">Contexto nacional</div><div class="txt">+8M propiedades · <b>86.8% residencial</b> · 36.000+ conjuntos en Bogotá · <b>70% predios de Bogotá</b> bajo este régimen · Cali: administración mayoritariamente informal</div></div>
+</div></div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">05 &middot; MARCO DE REFERENCIA</span></div><span class="tright">Fundamentos te&oacute;ricos, legales y contextuales</span></div>
+// 6 METODOLOGÍA
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">06 · METODOLOGÍA</span></div><span class="tb-right">¿Cómo se va a investigar?</span></div>
 <div class="sc">
-  <div class="slide-title">Marco de referencia</div>
-  <div class="g2" style="height:60%">
-    <div class="card">
-      <div class="clabel">Autores y teor&iacute;as clave</div>
-      <ul class="ul">
-        <li><b>Van Horne y Wachowicz (2010):</b> la administraci&oacute;n financiera eficiente depende de la calidad de la informaci&oacute;n contable y la capacidad de interpretarla</li>
-        <li><b>Moll y Yigitbasioglu (2019):</b> la IA transforma el rol del contador hacia mayor an&aacute;lisis &mdash; no lo elimina</li>
-        <li><b>Schwab (2016):</b> las organizaciones del futuro deben integrar IA para mantenerse competitivas</li>
-      </ul>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1%;height:100%">
-      <div class="card" style="flex:1">
-        <div class="clabel">Marco legal</div>
-        <ul class="ul">
-          <li><b>Ley 675 de 2001</b> &mdash; R&eacute;gimen de propiedad horizontal</li>
-          <li><b>Ley 1314 de 2009</b> &mdash; Convergencia hacia NIIF</li>
-          <li><b>Estatuto Tributario</b> &mdash; Retefuente, Reteica e IVA</li>
-          <li><b>C&oacute;digo de Comercio</b> &mdash; Responsabilidad de administradores</li>
-        </ul>
-      </div>
-      <div class="card gold" style="flex:1">
-        <div class="clabel">Contexto nacional</div>
-        <div class="cval">+8M propiedades horizontales &middot; <b>86.8% residencial</b> &middot; 36.000+ conjuntos en Bogot&aacute; &middot; <b>70% de predios de Bogot&aacute;</b> bajo este r&eacute;gimen &middot; Cali: administraci&oacute;n mayoritariamente informal (Lonja, 2023)</div>
-      </div>
-    </div>
-  </div>
-</div>`},
+<div class="h1">Marco metodológico</div>
+<div class="s3">
+<div class="sbox"><div class="sn" style="font-size:clamp(14px,3vw,30px)">Mixto</div><div class="sl">Cuantitativo + cualitativo</div></div>
+<div class="sbox"><div class="sn" style="font-size:clamp(14px,3vw,30px)">Desc.</div><div class="sl">Descriptivo y propositivo</div></div>
+<div class="sbox"><div class="sn" style="font-size:clamp(14px,3vw,30px)">Ded/Ind</div><div class="sl">Deductivo-inductivo</div></div>
+</div>
+<div class="g2">
+<div class="card gold"><div class="lbl">Población y muestra real</div><ul class="ul">
+<li><b>1.000 administradores</b> contactados por correo electrónico a nivel nacional</li>
+<li><b>400 administradores</b> con contacto directo vía WhatsApp</li>
+<li>Meta: <b>150 respuestas válidas</b> para análisis estadístico</li>
+<li>Muestreo no probabilístico por conveniencia</li>
+</ul></div>
+<div class="card"><div class="lbl">Instrumentos y fuentes</div><ul class="ul">
+<li>Encuesta: errores en retenciones · cartera · disposición a usar IA</li>
+<li>Fuentes: Ley 675, Ley 1314, DANE, Lonja de Propiedad Raíz</li>
+<li>Herramientas: Google Forms · Excel · Word</li>
+<li>Resultados en tablas y gráficas para el diseño del modelo</li>
+</ul></div>
+</div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">06 &middot; METODOLOG&Iacute;A</span></div><span class="tright">&iquest;C&oacute;mo se va a investigar?</span></div>
+// 7 LA APP
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">07 · LA HERRAMIENTA</span></div><span class="tb-right">La app con inteligencia artificial</span></div>
 <div class="sc">
-  <div class="slide-title">Marco metodol&oacute;gico</div>
-  <div class="srow" style="margin-bottom:1.2%">
-    <div class="sbox"><div class="snum" style="font-size:2.2vw">Mixto</div><div class="slbl">Enfoque cuantitativo + cualitativo</div></div>
-    <div class="sbox"><div class="snum" style="font-size:2.2vw">Desc.</div><div class="slbl">Tipo descriptivo y propositivo</div></div>
-    <div class="sbox"><div class="snum" style="font-size:2.2vw">Ded/Ind</div><div class="slbl">M&eacute;todo deductivo-inductivo</div></div>
-  </div>
-  <div class="g2" style="height:44%">
-    <div class="card gold">
-      <div class="clabel">Poblaci&oacute;n y muestra real</div>
-      <ul class="ul">
-        <li><b>1.000 administradores</b> contactados por correo electr&oacute;nico a nivel nacional</li>
-        <li><b>400 administradores</b> con contacto directo v&iacute;a WhatsApp</li>
-        <li>Meta m&iacute;nima: <b>150 respuestas v&aacute;lidas</b> para an&aacute;lisis estad&iacute;stico</li>
-        <li>Muestreo no probabil&iacute;stico por conveniencia</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="clabel">Instrumentos y fuentes</div>
-      <ul class="ul">
-        <li>Encuesta sobre: errores en retenciones &middot; estrategias de cartera &middot; disposici&oacute;n a usar IA</li>
-        <li>Fuentes: Ley 675, Ley 1314, DANE, Lonja de Propiedad Ra&iacute;z, Catastro Bogot&aacute;</li>
-        <li>An&aacute;lisis y tabulaci&oacute;n con herramientas digitales</li>
-        <li>Resultados presentados en tablas y gr&aacute;ficas</li>
-      </ul>
-    </div>
-  </div>
-</div>`},
+<div class="h1">La herramienta con inteligencia artificial</div>
+<div class="mlist">
+<div class="mrow"><div class="mn">01</div><div><div class="mname">Cálculo de retenciones tributarias</div><div class="mdesc">Calcula automáticamente Retefuente, Reteica e IVA con alertas de error antes de registrar el pago</div></div></div>
+<div class="mrow"><div class="mn">02</div><div><div class="mname">Revisión de comprobantes de egreso</div><div class="mdesc">Verifica y valida comprobantes detectando inconsistencias contables de forma automática</div></div></div>
+<div class="mrow"><div class="mn">03</div><div><div class="mname">Análisis de estados financieros</div><div class="mdesc">Balance general, resultados, activos y pasivos — evalúa si la copropiedad está en déficit o saludable</div></div></div>
+<div class="mrow"><div class="mn">04</div><div><div class="mname">Estrategias de recuperación de cartera</div><div class="mdesc">Diseña estrategias de cobro adaptadas a los ciclos de salarios, cesantías y primas</div></div></div>
+<div class="mrow hl"><div class="mn s">05</div><div><div class="mname" style="color:#C9A84C">Informes automáticos</div><div class="mdesc">Genera informes listos para asambleas, revisor fiscal y entes de control, identificando errores y oportunidades de mejora</div></div></div>
+</div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">07 &middot; LA HERRAMIENTA</span></div><span class="tright">Resultado esperado &mdash; la app con IA</span></div>
+// 8 CRONOGRAMA
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">08 · CRONOGRAMA Y RECURSOS</span></div><span class="tb-right">Plan de trabajo y presupuesto</span></div>
 <div class="sc">
-  <div class="slide-title">La herramienta con inteligencia artificial</div>
-  <div class="mlist" style="height:62%">
-    <div class="mrow"><div class="mnum">01</div><div><div class="mname">C&aacute;lculo de retenciones tributarias</div><div class="mdesc">Calcula autom&aacute;ticamente Retefuente, Reteica e IVA con alertas de error antes de registrar el pago al proveedor</div></div></div>
-    <div class="mrow"><div class="mnum">02</div><div><div class="mname">Revisi&oacute;n de comprobantes de egreso</div><div class="mdesc">Verifica y valida comprobantes detectando inconsistencias contables de forma autom&aacute;tica</div></div></div>
-    <div class="mrow"><div class="mnum">03</div><div><div class="mname">An&aacute;lisis de estados financieros</div><div class="mdesc">Balance general, estado de resultados, activos y pasivos &mdash; eval&uacute;a si la copropiedad est&aacute; en d&eacute;ficit o en condiciones saludables</div></div></div>
-    <div class="mrow"><div class="mnum">04</div><div><div class="mname">Estrategias de recuperaci&oacute;n de cartera</div><div class="mdesc">Dise&ntilde;a estrategias de cobro adaptadas a ciclos reales de ingresos: salarios, cesant&iacute;as y primas de los copropietarios</div></div></div>
-    <div class="mrow hl"><div class="mnum solid">05</div><div><div class="mname" style="color:#C9A84C">Informes autom&aacute;ticos</div><div class="mdesc">Genera informes listos para asambleas, revisor fiscal y entes de control, identificando errores y oportunidades de mejora</div></div></div>
-  </div>
-</div>`},
+<div class="h1">Plan de trabajo y recursos</div>
+<div class="g2">
+<div class="card"><div class="lbl">Cronograma</div><div class="tl">
+<div class="tlr"><div class="tlc now" style="font-size:9px">HOY</div><div><div class="tlp">Sem. 1–2 · En curso</div><div class="tlt">Revisión bibliográfica y validación de encuesta</div></div></div>
+<div class="tlr"><div class="tlc">2</div><div><div class="tlp">Sem. 2–3</div><div class="tlt">Aplicación de encuesta a 1.400 administradores</div></div></div>
+<div class="tlr"><div class="tlc">3</div><div><div class="tlp">Sem. 3–5</div><div class="tlt">Diseño del modelo con IA y desarrollo del prototipo</div></div></div>
+<div class="tlr"><div class="tlc">4</div><div><div class="tlp">Sem. 6</div><div class="tlt">Redacción del informe final</div></div></div>
+<div class="tlr"><div class="tlc">5</div><div><div class="tlp">Sem. 7 · Contaduría Pública</div><div class="tlt">Sustentación del trabajo de grado</div></div></div>
+</div></div>
+<div class="card gold"><div class="lbl">Presupuesto estimado</div>
+<div class="pr"><span>Conectividad a internet (6 meses)</span><span>$360.000</span></div>
+<div class="pr"><span>Materiales e impresión</span><span>$150.000</span></div>
+<div class="pr"><span>Herramientas digitales</span><span>$200.000</span></div>
+<div class="pr"><span>Transporte</span><span>$120.000</span></div>
+<div class="pr"><span>Imprevistos (10%)</span><span>$83.000</span></div>
+<div class="pr" style="font-size:clamp(11px,1.8vw,16px)"><span>TOTAL</span><span style="color:#C9A84C">$913.000 COP</span></div>
+<div style="font-size:clamp(8px,1.2vw,11px);color:#3a3a3a;margin-top:6px">*Computador y celular aportados por la investigadora.</div>
+</div></div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">08 &middot; CRONOGRAMA Y RECURSOS</span></div><span class="tright">Plan de trabajo y presupuesto</span></div>
+// 9 RESULTADOS
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">09 · RESULTADOS ESPERADOS</span></div><span class="tb-right">Lo que esta investigación va a entregar</span></div>
 <div class="sc">
-  <div class="slide-title">Plan de trabajo y recursos</div>
-  <div class="g2" style="height:60%">
-    <div class="card">
-      <div class="clabel">Cronograma de actividades</div>
-      <div class="tl">
-        <div class="tlrow"><div class="tlc now" style="font-size:.65vw">HOY</div><div><div class="tlphase">Sem. 1&ndash;2 &middot; En curso ahora</div><div class="tltext">Revisi&oacute;n bibliogr&aacute;fica, elaboraci&oacute;n y validaci&oacute;n de la encuesta</div></div></div>
-        <div class="tlrow"><div class="tlc">2</div><div><div class="tlphase">Sem. 2&ndash;3</div><div class="tltext">Aplicaci&oacute;n de encuesta a 1.400 administradores, an&aacute;lisis y tabulaci&oacute;n</div></div></div>
-        <div class="tlrow"><div class="tlc">3</div><div><div class="tlphase">Sem. 3&ndash;5</div><div class="tltext">Dise&ntilde;o del modelo de gesti&oacute;n con IA y desarrollo del prototipo</div></div></div>
-        <div class="tlrow"><div class="tlc">4</div><div><div class="tlphase">Sem. 6</div><div class="tltext">Redacci&oacute;n del informe final de investigaci&oacute;n</div></div></div>
-        <div class="tlrow"><div class="tlc">5</div><div><div class="tlphase">Sem. 7 &middot; Complementaci&oacute;n</div><div class="tltext">Sustentaci&oacute;n del trabajo de grado &middot; Contadur&iacute;a P&uacute;blica</div></div></div>
-      </div>
-    </div>
-    <div class="card gold">
-      <div class="clabel">Presupuesto fase de investigaci&oacute;n</div>
-      <div class="prow"><span>Conectividad a internet (6 meses)</span><span>$360.000</span></div>
-      <div class="prow"><span>Materiales e impresi&oacute;n</span><span>$150.000</span></div>
-      <div class="prow"><span>Herramientas digitales</span><span>$200.000</span></div>
-      <div class="prow"><span>Transporte y desplazamientos</span><span>$120.000</span></div>
-      <div class="prow"><span>Imprevistos (10%)</span><span>$83.000</span></div>
-      <div class="prow" style="color:#C9A84C"><span>TOTAL</span><span style="color:#C9A84C;font-size:1.1vw">$913.000 COP</span></div>
-      <div style="font-size:.78vw;color:#3a3a3a;margin-top:.5%">*Computador y celular aportados por la investigadora. Asesor&iacute;a docente es parte de los servicios acad&eacute;micos de UNICUCES.</div>
-    </div>
-  </div>
-</div>`},
+<div class="h1">Resultados esperados</div>
+<div class="g2">
+<div class="gcol">
+<div class="card"><div class="lbl">A · Diagnóstico documentado</div><div class="txt">Errores en retenciones y cartera basado en <b>150+ administradores</b> encuestados a nivel nacional</div></div>
+<div class="card"><div class="lbl">B · Guía de cobro</div><div class="txt">Estrategias adaptadas a ciclos reales: <b>salarios, cesantías y primas</b> de los copropietarios</div></div>
+<div class="card"><div class="lbl">C · Herramienta IA diseñada</div><div class="txt">Módulos para retenciones, comprobantes, análisis financiero e informes automáticos especializados</div></div>
+</div>
+<div class="gcol">
+<div class="card gold"><div class="lbl">D · Modelo implementable</div><div class="txt">Para copropiedades de <b>cualquier tamaño</b> — reduce errores y fortalece la imagen del administrador</div></div>
+<div class="card gold"><div class="lbl">E · Referente académico</div><div class="txt">Primer documento que une <b>contabilidad, propiedad horizontal e IA</b> en Colombia</div></div>
+<div class="pbox"><p>"Si se logra financiación externa, el prototipo podría estar funcionando antes de la graduación."</p></div>
+</div></div></div>`},
 
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">09 &middot; RESULTADOS ESPERADOS</span></div><span class="tright">Lo que esta investigaci&oacute;n va a entregar</span></div>
-<div class="sc">
-  <div class="slide-title">Resultados esperados</div>
-  <div class="g2" style="height:58%">
-    <div style="display:flex;flex-direction:column;gap:.8%;height:100%">
-      <div class="card" style="flex:1"><div class="clabel">A &middot; Diagn&oacute;stico documentado</div><div class="cval">Errores en retenciones y cartera basado en respuestas de al menos <b>150 administradores encuestados</b> a nivel nacional</div></div>
-      <div class="card" style="flex:1"><div class="clabel">B &middot; Gu&iacute;a de estrategias de cobro</div><div class="cval">Adaptadas a ciclos reales de ingresos: <b>salarios, cesant&iacute;as y primas</b> de los copropietarios colombianos</div></div>
-      <div class="card" style="flex:1"><div class="clabel">C &middot; Dise&ntilde;o funcional de la herramienta IA</div><div class="cval">M&oacute;dulos para retenciones, comprobantes, an&aacute;lisis financiero e informes autom&aacute;ticos en propiedad horizontal</div></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:.8%;height:100%">
-      <div class="card gold" style="flex:1"><div class="clabel">D &middot; Modelo implementable</div><div class="cval">Para copropiedades de <b>diferentes tama&ntilde;os</b> &mdash; reduce errores, mejora decisiones y fortalece la imagen del administrador</div></div>
-      <div class="card gold" style="flex:1"><div class="clabel">E &middot; Referente acad&eacute;mico</div><div class="cval">Documento de investigaci&oacute;n para futuros estudiantes en la intersecci&oacute;n entre <b>contabilidad, propiedad horizontal e IA</b> en Colombia</div></div>
-      <div class="pbox" style="flex:1;display:flex;align-items:center"><p>"Si se logra financiaci&oacute;n externa, el prototipo podr&iacute;a estar funcionando antes de la graduaci&oacute;n."</p></div>
-    </div>
-  </div>
-</div>`},
-
-{html:`
-<div class="topbar"><div class="tbrand"><div class="gdot"></div><span class="tbrand-txt">UNICUCES &middot; 2026</span></div><span class="tright">Francia Elvira Ram&iacute;rez Robayo</span></div>
-<div class="cierre-center">
-  <div class="slide-tag" style="font-size:1vw;padding:.4% 1.5%;margin-bottom:2%">MENSAJE FINAL</div>
-  <div class="cierre-phrase">"Esta investigaci&oacute;n no solo culmina una carrera &mdash;<br><span>transforma la forma en que se gestiona contablemente<br>la propiedad horizontal en Colombia.</span>"</div>
-  <div class="cover-meta" style="margin-top:2.5%">
-    <div class="cmeta"><b>Francia Elvira Ram&iacute;rez Robayo</b></div>
-    <div class="cmeta">Mg. <b>Ingrid Vaneza Ca&ntilde;izares Narv&aacute;ez</b> &middot; Asesora</div>
-    <div class="cmeta"><b>UNICUCES</b> &middot; Cali, 2026</div>
-  </div>
-  <div style="margin-top:1.5%;font-size:.9vw;color:#333">Tecnolog&iacute;a en Gesti&oacute;n Contable y Financiera &middot; Grupo Semilleros de Investigaci&oacute;n UNICUCES</div>
+// 10 CIERRE
+{h:`<div class="tb"><div class="tb-left"><div class="tb-dot"></div><span class="tb-title">UNICUCES · 2026</span></div><span class="tb-right">Francia Elvira Ramírez Robayo</span></div>
+<div class="cierre">
+<div class="ctag">MENSAJE FINAL</div>
+<div class="cfrase">"Esta investigación no solo culmina una carrera —<br><span>transforma la forma en que se gestiona contablemente<br>la propiedad horizontal</span> en Colombia."</div>
+<div class="cmetas">
+<div class="cm"><b>Francia Elvira Ramírez Robayo</b></div>
+<div class="cm">Asesora: <b>Mg. Ingrid Vaneza Cañizares Narváez</b></div>
+<div class="cm"><b>UNICUCES</b> · Santiago de Cali · 2026</div>
+</div>
+<div style="font-size:clamp(8px,1.4vw,13px);color:#2a2a2a">Tecnología en Gestión Contable y Financiera · Grupo Semilleros de Investigación UNICUCES</div>
 </div>`}
 ];
 
 let cur=0;
-const n=slides.length;
-const wrap=document.getElementById('slides-wrap');
-slides.forEach((s,i)=>{
+const n=S.length;
+const wrap=document.getElementById('wrap');
+let sx=0,sy=0;
+
+S.forEach((s,i)=>{
   const d=document.createElement('div');
-  d.className='slide'+(i===0?' active':'');
-  d.id='s'+i;
-  d.innerHTML=s.html;
+  d.className='slide'+(i===0?' on':'');
+  d.innerHTML=s.h;
   wrap.appendChild(d);
 });
 
 function render(){
-  document.querySelectorAll('.slide').forEach((el,i)=>el.classList.toggle('active',i===cur));
+  document.querySelectorAll('.slide').forEach((el,i)=>el.classList.toggle('on',i===cur));
   document.getElementById('prog').style.width=((cur+1)/n*100)+'%';
-  const dd=document.getElementById('dots');
-  dd.innerHTML='';
+  document.getElementById('counter').textContent=(cur+1)+' / '+n;
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
   for(let i=0;i<n;i++){
-    const dot=document.createElement('div');
-    dot.className='dot'+(i===cur?' on':'');
-    dot.onclick=()=>goTo(i);
-    dd.appendChild(dot);
+    const d=document.createElement('div');
+    d.className='dot'+(i===cur?' on':'');
+    d.onclick=()=>{cur=i;render()};
+    dots.appendChild(d);
   }
-  document.getElementById('bprev').style.opacity=cur===0?'0.3':'1';
-  document.getElementById('bnext').textContent=cur===n-1?'Reiniciar \u21BA':'Siguiente \u2192';
-  document.getElementById('sinfo').textContent=(cur+1)+' de '+n;
+  const pb=document.getElementById('bprev');
+  const nb=document.getElementById('bnext');
+  pb.style.opacity=cur===0?'0.35':'1';
+  nb.textContent=cur===n-1?'↺ Inicio':'Siguiente →';
 }
-function goTo(i){cur=i;render()}
+
 function next(){cur=cur===n-1?0:cur+1;render()}
 function prev(){if(cur>0){cur--;render()}}
-function toggleFS(){
-  if(!document.fullscreenElement){document.documentElement.requestFullscreen();}
-  else{document.exitFullscreen();}
-}
+
+// Swipe táctil
+wrap.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+wrap.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx;
+  const dy=Math.abs(e.changedTouches[0].clientY-sy);
+  if(Math.abs(dx)>50&&dy<80){dx<0?next():prev()}
+},{passive:true});
+
+// Teclado
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();}
-  if(e.key==='ArrowLeft'){e.preventDefault();prev();}
-  if(e.key==='f'||e.key==='F'){toggleFS();}
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}
+  if(e.key==='ArrowLeft'){e.preventDefault();prev()}
 });
+
 render();
 </script>
 </body>
